@@ -1,0 +1,92 @@
+#!/usr/bin/env node
+
+// ---
+
+var path = require('path');
+
+// ---
+
+var opt = require('node-getopt')
+	.create([
+		['r' , 'roost=ARG', 'Specify the root of a roost project or a roost manifest.'],
+		['d' , 'dry', 'Dry run the roost manifest.'],
+		['h' , 'help', 'Display this help.'],
+	])
+	.bindHelp()
+	.parseSystem();
+	
+// ---
+
+var lib = path.join(__dirname, '..', 'lib');
+var manifest = require(path.join(lib, 'manifest.js'));
+var target = require(path.join(lib, 'target.js'));
+var plugins = require(path.join(lib, 'plugins.js'));
+var engine = require(path.join(lib, 'engine.js'));
+
+// --
+
+var roostLocation;
+
+try {
+	roostLocation = manifest.locate(opt.options.roost);
+} catch (e) {
+	console.error(e.message);
+	
+	process.exit(2);
+}
+
+// --
+
+var roostManifest;
+
+try {
+	roostManifest = manifest.load(roostLocation);
+} catch (e) {
+	console.error(e.message);
+	
+	process.exit(3);
+}
+
+// --
+
+var targetInstances;
+
+try {
+	targetInstances = target.instances(opt.argv.length ? opt.argv : ['local:']);
+} catch (e) {
+	console.error(e.message);
+	
+	process.exit(4);
+}
+
+// ---
+
+var executionPlugins;
+
+try {
+	executionPlugins = plugins.load(roostManifest);
+} catch (e) {
+	console.error(e.message);
+	
+	process.exit(5);
+}
+
+// ---
+
+targetInstances.forEach(function (targetInstance) {
+	try {
+		engine.launch(roostManifest, targetInstance, executionPlugins);
+	} catch (e) {
+		console.error(e.message);
+		
+		process.exit(6);
+	}
+	
+	try {
+		targetInstance.ignite(opt.options.dry);
+	} catch (e) {
+		console.error(e.message);
+		
+		process.exit(8);
+	}
+});
