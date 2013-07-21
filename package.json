@@ -1,5 +1,6 @@
 {
 	"name": "roost",
+	"version": "0.1.0",
 	"description": "Simple system provisioning toolkit for nodejs.",
 	
 	"dependencies": {
