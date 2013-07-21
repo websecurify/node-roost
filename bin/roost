@@ -52,7 +52,7 @@ try {
 var executionPlugins;
 
 try {
-	executionPlugins = plugins.load(roostManifest);
+	executionPlugins = plugins.obtain(roostManifest);
 } catch (e) {
 	console.error(e.message);
 	
