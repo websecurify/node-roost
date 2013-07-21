@@ -73,13 +73,21 @@ try {
 
 // ---
 
+if (targetInstances.length == 0) {
+	console.error('no target specified');
+	
+	process.exit(6);
+}
+
+// ---
+
 targetInstances.forEach(function (targetInstance) {
 	try {
 		engine.launch(roostManifest, targetInstance, executionPlugins);
 	} catch (e) {
 		console.error(e.message);
 		
-		process.exit(6);
+		process.exit(7);
 	}
 	
 	try {
