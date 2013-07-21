@@ -19,8 +19,8 @@ var opt = require('node-getopt')
 
 var lib = path.join(__dirname, '..', 'lib');
 var manifest = require(path.join(lib, 'manifest.js'));
-var target = require(path.join(lib, 'target.js'));
 var plugins = require(path.join(lib, 'plugins.js'));
+var target = require(path.join(lib, 'target.js'));
 var engine = require(path.join(lib, 'engine.js'));
 
 // --
@@ -47,12 +47,12 @@ try {
 	process.exit(3);
 }
 
-// --
+// ---
 
-var targetInstances;
+var executionPlugins;
 
 try {
-	targetInstances = target.instances(opt.argv.length ? opt.argv : ['local:']);
+	executionPlugins = plugins.load(roostManifest);
 } catch (e) {
 	console.error(e.message);
 	
@@ -61,10 +61,10 @@ try {
 
 // ---
 
-var executionPlugins;
+var targetInstances;
 
 try {
-	executionPlugins = plugins.load(roostManifest);
+	targetInstances = target.instances(opt.argv.length ? opt.argv : ['local:']);
 } catch (e) {
 	console.error(e.message);
 	
