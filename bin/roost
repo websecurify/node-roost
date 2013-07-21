@@ -20,7 +20,7 @@ var opt = require('node-getopt')
 var lib = path.join(__dirname, '..', 'lib');
 var manifest = require(path.join(lib, 'manifest.js'));
 var plugins = require(path.join(lib, 'plugins.js'));
-var target = require(path.join(lib, 'target.js'));
+var targets = require(path.join(lib, 'targets.js'));
 var engine = require(path.join(lib, 'engine.js'));
 
 // --
@@ -64,7 +64,7 @@ try {
 var targetInstances;
 
 try {
-	targetInstances = target.obtain(opt.argv.length ? opt.argv : ['local:']);
+	targetInstances = targets.obtain(opt.argv.length ? opt.argv : ['local:']);
 } catch (e) {
 	console.error(e.message);
 	
