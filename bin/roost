@@ -64,7 +64,7 @@ try {
 var targetInstances;
 
 try {
-	targetInstances = target.instances(opt.argv.length ? opt.argv : ['local:']);
+	targetInstances = target.obtain(opt.argv.length ? opt.argv : ['local:']);
 } catch (e) {
 	console.error(e.message);
 	
