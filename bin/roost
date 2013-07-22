@@ -83,7 +83,7 @@ if (targetInstances.length == 0) {
 
 targetInstances.forEach(function (targetInstance) {
 	try {
-		engine.launch(roostManifest, targetInstance, executionPlugins);
+		engine.launch(roostManifest, executionPlugins, targetInstance);
 	} catch (e) {
 		console.error(e.message);
 		
