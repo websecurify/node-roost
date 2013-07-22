@@ -1,6 +1,6 @@
 {
 	"name": "roost",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"author": "Websecurify <contact@websecurify.com>",
 	"description": "Simple system provisioning toolkit for nodejs.",
 	"license": "MIT",
