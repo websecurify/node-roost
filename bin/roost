@@ -57,10 +57,10 @@ try {
 
 // ---
 
-var executionPlugins;
+var roostPlugins;
 
 try {
-	executionPlugins = plugins.obtain(roostManifest);
+	roostPlugins = plugins.obtain(roostManifest);
 } catch (e) {
 	console.error(e.message);
 	
@@ -69,10 +69,10 @@ try {
 
 // ---
 
-var targetInstances;
+var roostTargets;
 
 try {
-	targetInstances = targets.obtain(opt.argv.length ? opt.argv : ['local:']);
+	roostTargets = targets.obtain(opt.argv.length ? opt.argv : ['local:']);
 } catch (e) {
 	console.error(e.message);
 	
@@ -81,25 +81,17 @@ try {
 
 // ---
 
-if (targetInstances.length == 0) {
-	console.error('no target specified');
-	
-	process.exit(6);
-}
-
-// ---
-
-targetInstances.forEach(function (targetInstance) {
-	try {
-		engine.launch(roostManifest, executionPlugins, targetInstance);
-	} catch (e) {
-		console.error(e.message);
-		
-		process.exit(7);
-	}
+roostTargets.forEach(function (roostTarget) {
+	var callback = function (err) {
+		if (err) {
+			console.error(err.message);
+			
+			process.exit(7);
+		}
+	};
 	
 	try {
-		targetInstance.ignite(opt.options.dry);
+		engine.launch(opt, roostManifest, roostPlugins, roostTarget, callback);
 	} catch (e) {
 		console.error(e.message);
 		
