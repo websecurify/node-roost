@@ -13,7 +13,7 @@
 		"node",
 		"provisioning",
 		"provision",
-		"apt-get"
+		"apt-get",
 		"ubuntu"
 	],
 	
