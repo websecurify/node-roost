@@ -8,7 +8,7 @@ var path = require('path');
 
 var opt = require('node-getopt')
 	.create([
-		['r' , 'roost=ARG', 'Specify the root of a roost project or a roost manifest.'],
+		['f' , 'file=ARG', 'Specify the root of a roost project or a roost manifest.'],
 		['d' , 'dry', 'Dry run the roost manifest.'],
 		['v' , 'verbose+', 'Make it verbose.'],
 		['h' , 'help', 'Display this help.'],
@@ -36,7 +36,7 @@ if (opt.options.verbose) {
 var roostLocation;
 
 try {
-	roostLocation = manifest.locate(opt.options.roost);
+	roostLocation = manifest.locate(opt.options.file);
 } catch (e) {
 	console.error(e.message);
 	
@@ -85,8 +85,6 @@ roostTargets.forEach(function (roostTarget) {
 	var callback = function (err) {
 		if (err) {
 			console.error(err.message);
-			
-			process.exit(7);
 		}
 	};
 	
@@ -95,6 +93,6 @@ roostTargets.forEach(function (roostTarget) {
 	} catch (e) {
 		console.error(e.message);
 		
-		process.exit(8);
+		process.exit(7);
 	}
 });
