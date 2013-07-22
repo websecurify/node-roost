@@ -1,8 +1,9 @@
 {
 	"name": "roost",
-	"version": "0.1.0",
+	"version": "0.1.1",
+	"author": "Websecurify <contact@websecurify.com>",
 	"description": "Simple system provisioning toolkit for nodejs.",
-	"main": "index.js",
+	"license": "MIT",
 	
 	"repository": {
 		"type": "git",
@@ -17,8 +18,15 @@
 		"ubuntu"
 	],
 	
-	"author": "Websecurify <contact@websecurify.com>",
-	"license": "BSD",
+	"main": "lib/index.js",
+	
+	"bin": {
+		"roost": "./bin/roost"
+	},
+	
+	"directories": {
+		"lib": "./lib/"
+	},
 	
 	"dependencies": {
 		"node-getopt": "0.2.3",
