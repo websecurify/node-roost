@@ -2,6 +2,23 @@
 	"name": "roost",
 	"version": "0.1.0",
 	"description": "Simple system provisioning toolkit for nodejs.",
+	"main": "index.js",
+	
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/websecurify/node-roost.git"
+	},
+	
+	"keywords": [
+		"node",
+		"provisioning",
+		"provision",
+		"apt-get"
+		"ubuntu"
+	],
+	
+	"author": "Websecurify <contact@websecurify.com>",
+	"license": "BSD",
 	
 	"dependencies": {
 		"node-getopt": "0.2.3",
