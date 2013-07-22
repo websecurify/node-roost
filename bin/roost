@@ -10,6 +10,7 @@ var opt = require('node-getopt')
 	.create([
 		['r' , 'roost=ARG', 'Specify the root of a roost project or a roost manifest.'],
 		['d' , 'dry', 'Dry run the roost manifest.'],
+		['v' , 'verbose+', 'Make it verbose.'],
 		['h' , 'help', 'Display this help.'],
 	])
 	.bindHelp()
@@ -18,12 +19,19 @@ var opt = require('node-getopt')
 // ---
 
 var lib = path.join(__dirname, '..', 'lib');
+var logger = require(path.join(lib, 'logger.js'));
 var manifest = require(path.join(lib, 'manifest.js'));
 var plugins = require(path.join(lib, 'plugins.js'));
 var targets = require(path.join(lib, 'targets.js'));
 var engine = require(path.join(lib, 'engine.js'));
 
-// --
+// ---
+
+if (opt.options.verbose) {
+	logger.setGlobalLevel(3 - (opt.options.verbose.length < 3 ? opt.options.verbose.length : 3));
+}
+
+// ---
 
 var roostLocation;
 
@@ -35,7 +43,7 @@ try {
 	process.exit(2);
 }
 
-// --
+// ---
 
 var roostManifest;
 
