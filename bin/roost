@@ -38,6 +38,8 @@ var roostLocation;
 try {
 	roostLocation = manifest.locate(opt.options.file);
 } catch (e) {
+	logger.exception(e);
+	
 	console.error(e.message);
 	
 	process.exit(2);
@@ -50,6 +52,8 @@ var roostManifest;
 try {
 	roostManifest = manifest.load(roostLocation);
 } catch (e) {
+	logger.exception(e);
+	
 	console.error(e.message);
 	
 	process.exit(3);
@@ -62,6 +66,8 @@ var roostPlugins;
 try {
 	roostPlugins = plugins.obtain(roostManifest);
 } catch (e) {
+	logger.exception(e);
+	
 	console.error(e.message);
 	
 	process.exit(4);
@@ -74,6 +80,8 @@ var roostTargets;
 try {
 	roostTargets = targets.obtain(opt.argv.length ? opt.argv : ['local:']);
 } catch (e) {
+	logger.exception(e);
+	
 	console.error(e.message);
 	
 	process.exit(5);
@@ -81,16 +89,24 @@ try {
 
 // ---
 
+var callback = function (err) {
+	if (err) {
+		logger.exception(err);
+		
+		console.error(err.message);
+		
+		// NOTE: too late to exit the process at this stage
+	}
+};
+
+// ---
+
 roostTargets.forEach(function (roostTarget) {
-	var callback = function (err) {
-		if (err) {
-			console.error(err.message);
-		}
-	};
-	
 	try {
 		engine.launch(opt, roostManifest, roostPlugins, roostTarget, callback);
 	} catch (e) {
+		logger.exception(e);
+		
 		console.error(e.message);
 		
 		process.exit(7);
