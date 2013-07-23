@@ -8,10 +8,11 @@ var path = require('path');
 
 var opt = require('node-getopt')
 	.create([
-		['f' , 'file=ARG', 'Specify the root of a roost project or a roost manifest.'],
-		['d' , 'dry', 'Dry run the roost manifest.'],
-		['v' , 'verbose+', 'Make it verbose.'],
-		['h' , 'help', 'Display this help.'],
+		['f', 'file=ARG', 'Specify the root of a roost project or a roost manifest.'],
+		['d', 'dry', 'Dry run the roost manifest.'],
+		['v', 'verbose+', 'Make it verbose.'],
+		['c', 'colorize', 'Make it pretty.'],
+		['h', 'help', 'Display this help.'],
 	])
 	.bindHelp()
 	.parseSystem();
@@ -29,6 +30,10 @@ var engine = require(path.join(lib, 'engine.js'));
 
 if (opt.options.hasOwnProperty('verbose')) {
 	logger.setGlobalLevel(3 - (opt.options.verbose.length < 3 ? opt.options.verbose.length : 3));
+}
+
+if (opt.options.hasOwnProperty('colorize')) {
+	logger.setGlobalColorization(opt.options.colorize);
 }
 
 // ---
@@ -79,7 +84,7 @@ var roostTargets;
 
 try {
 	roostTargets = (opt.argv.length ? opt.argv : ['local:']).map(function (spec) {
-		return target.instance(spec);
+		return targets.instance(spec);
 	});
 } catch (e) {
 	logger.exception(e);
