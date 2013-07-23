@@ -84,7 +84,7 @@ var roostTargets;
 
 try {
 	roostTargets = (opt.argv.length ? opt.argv : ['local:']).map(function (spec) {
-		return targets.instance(spec);
+		return targets.instance(spec, roostManifest);
 	});
 } catch (e) {
 	logger.exception(e);
