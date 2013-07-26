@@ -1,6 +1,6 @@
 {
 	"name": "roost",
-	"version": "0.6.4",
+	"version": "0.6.5",
 	"author": "Websecurify <contact@websecurify.com>",
 	"description": "System provisioning toolkit.",
 	"license": "MIT",
