@@ -42,21 +42,25 @@ Verbose messaging can be achieved via the `-v|--verbose` flags. Use the `-c|--co
 The following snippet describes the basic structure of the roost manifest file.
 
 	{
-		"plugins": {
-			"node-roost-nginx": true 				// true or false for loading extra plugins in the form of nodejs modules 
-		},
+		"bootstrap": [
+			"command"
+		]
+		
+		"plugins": [
+			"plugin-name"
+		],
 		
 		"packages": {
-			"nodejs": "version|installed|purged" 	// excepted input is version, installed (for the latest version) or purged
+			"nodejs": "version|installed|purged"
 		},
 		
 		"services": {
-			"nginx": "running|stopped" 				// a service can be either running or stopped
+			"nginx": "running|stopped"
 		},
 		
-		"commands": {
-			"command": true 						// a command will execute if true or not execute if false
-		}
+		"commands": [
+			"command"
+		]
 	}
 
 Apt can be configured with the following directive:
@@ -67,13 +71,12 @@ Apt can be configured with the following directive:
 		}
 	}
 
-Due to the nature of JSON documents you can use a mix of the values provided above.
-
 # Order Of Execution
 
 Roost does not expose means by which you can configure the order of execution of things. The order is already chosen for you in advance, which is:
 
 * plugins
+* bootstrap
 * packages
 * services
 * commands
