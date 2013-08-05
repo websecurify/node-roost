@@ -1,6 +1,6 @@
 {
 	"name": "roost",
-	"version": "0.6.10",
+	"version": "0.6.12",
 	"author": "Websecurify <contact@websecurify.com>",
 	"description": "System provisioning toolkit.",
 	"license": "MIT",
@@ -18,7 +18,7 @@
 		"ubuntu"
 	],
 	
-	"main": "lib/index.js",
+	"main": "./lib/index.js",
 	
 	"bin": {
 		"roost": "./bin/roost"
