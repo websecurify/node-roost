@@ -3,6 +3,7 @@
 // ---
 
 var path = require('path');
+var logsmith = require('logsmith');
 
 // ---
 
@@ -20,7 +21,6 @@ var opt = require('node-getopt')
 // ---
 
 var lib = path.join(__dirname, '..', 'lib');
-var logger = require(path.join(lib, 'logger.js'));
 var engine = require(path.join(lib, 'engine.js'));
 var plugins = require(path.join(lib, 'plugins.js'));
 var targets = require(path.join(lib, 'targets.js'));
@@ -29,11 +29,11 @@ var manifest = require(path.join(lib, 'manifest.js'));
 // ---
 
 if (opt.options.hasOwnProperty('verbose')) {
-	logger.setGlobalLevel(3 - (opt.options.verbose.length < 3 ? opt.options.verbose.length : 3));
+	logsmith.setGlobalLevel(3 - (opt.options.verbose.length < 3 ? opt.options.verbose.length : 3));
 }
 
 if (opt.options.hasOwnProperty('colorize')) {
-	logger.setGlobalColorization(opt.options.colorize);
+	logsmith.setGlobalColorization(opt.options.colorize);
 }
 
 // ---
@@ -43,9 +43,9 @@ var roostLocation;
 try {
 	roostLocation = manifest.locate(opt.options.file);
 } catch (e) {
-	logger.exception(e);
+	logsmith.exception(e);
 	
-	logger.error(e.message);
+	logsmith.error(e.message);
 	
 	process.exit(2);
 }
@@ -57,9 +57,9 @@ var roostManifest;
 try {
 	roostManifest = manifest.load(roostLocation);
 } catch (e) {
-	logger.exception(e);
+	logsmith.exception(e);
 	
-	logger.error(e.message);
+	logsmith.error(e.message);
 	
 	process.exit(3);
 }
@@ -71,9 +71,9 @@ var roostPlugins;
 try {
 	roostPlugins = plugins.obtain(roostManifest);
 } catch (e) {
-	logger.exception(e);
+	logsmith.exception(e);
 	
-	logger.error(e.message);
+	logsmith.error(e.message);
 	
 	process.exit(4);
 }
@@ -87,9 +87,9 @@ try {
 		return targets.instance(spec, roostManifest);
 	});
 } catch (e) {
-	logger.exception(e);
+	logsmith.exception(e);
 	
-	logger.error(e.message);
+	logsmith.error(e.message);
 	
 	process.exit(5);
 }
@@ -98,9 +98,9 @@ try {
 
 var callback = function (err) {
 	if (err) {
-		logger.exception(err);
+		logsmith.exception(err);
 		
-		logger.error(err.message);
+		logsmith.error(err.message);
 		
 		process.exit(8);
 	}
@@ -112,9 +112,9 @@ roostTargets.forEach(function (roostTarget) {
 	try {
 		engine.launch(opt, roostManifest, roostPlugins, roostTarget, callback);
 	} catch (e) {
-		logger.exception(e);
+		logsmith.exception(e);
 		
-		logger.error(e.message);
+		logsmith.error(e.message);
 		
 		process.exit(7);
 	}
