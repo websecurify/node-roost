@@ -115,6 +115,6 @@ We want to support the community to create all kinds of ready-made systems. Shar
 
 * [node-roost-nginx](https://github.com/websecurify/node-roost-nginx/) - install and configure nginx
 * [node-roost-nodejs](https://github.com/websecurify/node-roost-nodejs/) - install and configure nodejs
-* [node-roost-mongo](https://github.com/websecurify/node-roost-mongo/) - install and configure mongo
+* [node-roost-mongodb](https://github.com/websecurify/node-roost-mongodb/) - install and configure mongodb
 
 The easiest way to install these plugins is to create a package.json file and declare the modules just as you usually do. Execute npm install inside the same folder than use roost to load the plugins that you need. It is as simple as that.
