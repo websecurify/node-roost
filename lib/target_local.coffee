@@ -37,12 +37,13 @@ exports.Target = class Target extends helpers.Target
 		real_source = path.resolve path.dirname(@manifest.meta.location), source
 		task =
 			desc: "copy #{source} to #{dest}"
-			run: (callback) => fs_extra.copy real_source, dest, (err) ->
-				logsmith.exception err if err
-				
-				return callback new Error "copy failed" if err
-				return callback null if callback
-				
+			run: (callback) ->
+				fs_extra.copy real_source, dest, (err) ->
+					logsmith.exception err if err
+					
+					return callback new Error "copy failed" if err
+					return callback null if callback
+					
 		@step task
 		
 	exec: (command, failproof_or_handler) ->
