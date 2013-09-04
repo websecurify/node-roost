@@ -7,6 +7,9 @@ helpers = require './helpers'
 # ---
 
 exports.Target = class Target extends helpers.Target
+	constructor: (@spec, @manifest) ->
+		super()
+		
 	create_exec_handler: (callback, failproof_or_handler) ->
 		(err, stream) ->
 			return callback err if err
