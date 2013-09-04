@@ -12,7 +12,7 @@ exports.roost = (opt, manifest, target) ->
 	true_values = [1, true, 'true', 'run', 'running', 'start', 'started']
 	false_values = [0, false, 'false', 'stop', 'stopped']
 	
-	for name, value in manifest.services
+	for name, value of manifest.services
 		switch
 			when value in true_values then action = 'restart'
 			when value in false_values then action = 'stop'
