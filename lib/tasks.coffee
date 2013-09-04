@@ -25,18 +25,19 @@ exports.roost = (opt, manifest, target) ->
 	catch
 		throw new Error 'cyclic condition detected in tasks'
 		
-	for task_name, task_def of manifest.tasks
-		order.unshift task_name if task_name not in order
-		
-	actions = []
-	
-	for task_name in order
+	for task_name in order.reverse()
 		task_def = manifest.tasks[task_name]
 		task_def.meta = location: manifest.meta.location
 		
-		actions.push do (task_name, task_def) ->
+		target.next do (task_name, task_def) ->
 			(callback) ->
 				engine.launch opt, task_def, [], target, callback
 				
-	async.series actions, () -> # pass
-	
+	for task_name, task_def of manifest.tasks
+		if task_name not in order
+			task_def.meta = location: manifest.meta.location
+			
+			target.next do (task_name, task_def) ->
+				(callback) ->
+					engine.launch opt, task_def, [], target, callback
+					
