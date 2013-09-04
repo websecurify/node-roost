@@ -1,0 +1,9 @@
+{
+	"bootstrap": [
+		"echo Hello"
+	],
+	
+	"commands": [
+		"echo World"
+	]
+}
