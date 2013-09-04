@@ -1,3 +1,6 @@
+path = require 'path'
+fs_extra = require 'fs-extra'
+logsmith = require 'logsmith'
 child_process = require 'child_process'
 
 # ---
@@ -29,6 +32,18 @@ exports.Target = class Target extends helpers.Target
 		child.on 'exit', (code) -> shell_stream.emit_exit code
 		
 		callback null, shell_stream if callback
+		
+	copy: (source, dest) ->
+		real_source = path.resolve path.dirname(@manifest.meta.location), source
+		task =
+			desc: "copy #{source} to #{dest}"
+			run: (callback) => fs_extra.copy real_source, dest, (err) ->
+				logsmith.exception err if err
+				
+				return callback new Error "copy failed" if err
+				return callback null if callback
+				
+		@step task
 		
 	exec: (command, failproof_or_handler) ->
 		task =
