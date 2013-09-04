@@ -61,6 +61,7 @@ exports.Target = class Target
 	constructor: () ->
 		@steps = []
 		@recoveries = []
+		@ignited = false
 		
 	next: (task, callback) ->
 		@steps.unshift [task, callback]
@@ -72,6 +73,7 @@ exports.Target = class Target
 		@recoveries.push [task, callback]
 		
 	ignite: (dry, callback) ->
+		@ignited = true
 		exec_err = null
 		exec_pointer = 'steps'
 		
