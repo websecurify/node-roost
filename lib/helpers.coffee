@@ -62,6 +62,9 @@ exports.Target = class Target
 		@steps = []
 		@recoveries = []
 		
+	next: (task, callback) ->
+		@steps.unshift [task, callback]
+		
 	step: (task, callback) ->
 		@steps.push [task, callback]
 		
@@ -69,48 +72,50 @@ exports.Target = class Target
 		@recoveries.push [task, callback]
 		
 	ignite: (dry, callback) ->
-		if dry
-			for entry in @steps
-				task = entry[0]
-				task_callback = entry[1]
-				
+		exec_err = null
+		exec_pointer = 'steps'
+		
+		test = () =>
+			return true if @[exec_pointer].length > 0
+			return false if exec_pointer == 'recoveries'
+			
+			exec_pointer = 'recoveries'
+			
+			return do arguments.callee
+			
+		fn = (callback) =>
+			entry = @[exec_pointer].shift()
+			task = entry[0]
+			task_callback = entry[1]
+			
+			if dry
 				logsmight.info task.desc if task.desc?
 				
-			for entry in @recoveries
-				task = entry[0]
-				task_callback = entry[1]
-				
-				logsmith.info task.desc if task.desc?
-				
-			do callback
-		else
-			steps_queue = async.queue (task, callback) ->
+				return callback null if callback
+			else
+				super_callback = (err) =>
+					task_callback err if task_callback
+					
+					if err
+						if exec_pointer == 'recoveries'
+							logsmith.error err
+						else
+							@steps = []
+							exec_err = err
+							exec_pointer = 'recoveries'
+							
+					return callback null if callback
+					
 				logsmight.info task.desc if task.desc?
 				
-				return task.run callback if task.run?
-				return task callback if task
+				return task.run super_callback if task.run?
+				return task super_callback if task
 				
-			steps_queue.drain = () =>
-				recoveries_queue = async.queue (task, callback) ->
-					logsmight.info task.desc if task.desc?
-				
-					return task.run callback if task.run?
-					return task callback if task
-					
-				recoveries_queue.drain = callback
-				
-				for entry in @recoveries
-					task = entry[0]
-					task_callback = entry[1]
-					
-					recoveries_queue.push task, task_callback
-					
-			for entry in @steps
-				task = entry[0]
-				task_callback = entry[1]
-				
-				steps_queue.push task, task_callback
-				
+		async.whilst test, fn, (err) ->
+			return callback err if err
+			return callback exec_err if exec_err
+			return callback null if callback
+			
 	exec: () -> throw new Error "not implemented"
 	spawn: () -> throw new Error "not implemented"
 	
