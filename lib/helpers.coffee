@@ -22,6 +22,11 @@ exports.Stream = class Stream extends events.EventEmitter
 	
 # ---
 
+exports.create_task = (desc, run) ->
+	return task: desc: desc, run: run
+	
+# ---
+
 exports.create_exec_handler = (callback, failproof_or_handler) ->
 	(err, stream) ->
 		return callback err if err
