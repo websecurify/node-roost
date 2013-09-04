@@ -108,6 +108,29 @@ exports.Target = class Target extends helpers.Target
 			
 			return callback null, shell_stream if callback
 			
+	copy: (source, dest) ->
+		real_source = path.resolve path.dirname(@manifest.meta.location), source
+		task =
+			desc: "copy #{source} to #{dest}"
+			run: (callback) =>
+				next = () =>
+					@sftp.fastPut real_source, dest, (err) ->
+						return callback err if err
+						return callback null if callback
+						
+				if not @sftp?
+					@ssh2.sftp (err, sftp) =>
+						return callback err if err
+						
+						@sftp = sftp
+						@recover (callback) => @sftp.end()
+						
+						do next
+				else
+					do next
+					
+		@step task
+		
 	exec: (command, failproof_or_handler) ->
 		task =
 			desc: command
