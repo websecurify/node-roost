@@ -27,30 +27,58 @@ exports.Stream = class Stream extends events.EventEmitter
 
 exports.Target = class Target
 	constructor: () ->
-		@tasks = []
+		@steps = []
+		@recoveries = []
 		
 	step: (task, callback) ->
-		@tasks.push task, callback
+		@steps.push [task, callback]
+		
+	recover: (task, callback) ->
+		@recoveries.push [task, callback]
 		
 	ignite: (dry, callback) ->
 		if dry
-			for task in @tasks
+			for entry in @steps
+				task = entry[0]
+				task_callback = entry[1]
+				
 				logsmight.info task.desc if task.desc?
+				
+			for entry in @recoveries
+				task = entry[0]
+				task_callback = entry[1]
+				
+				logsmith.info task.desc if task.desc?
 				
 			do callback
 		else
-			queue = async.queue (task, callback) ->
+			steps_queue = async.queue (task, callback) ->
 				logsmight.info task.desc if task.desc?
 				
 				return task.run callback if task.run?
 				return task callback if task
 				
-			queue.drain = callback
-			
-			for task in @tasks
-				queue.push task if task
+			steps_queue.drain = () =>
+				recoveries_queue = async.queue (task, callback) ->
+					logsmight.info task.desc if task.desc?
 				
-	copy: () -> throw new Error "not implemented"
+					return task.run callback if task.run?
+					return task callback if task
+					
+				recoveries_queue.drain = callback
+				
+				for entry in @recoveries
+					task = entry[0]
+					task_callback = entry[1]
+					
+					recoveries_queue.push task, task_callback
+					
+			for entry in @steps
+				task = entry[0]
+				task_callback = entry[1]
+				
+				steps_queue.push task, task_callback
+				
 	exec: () -> throw new Error "not implemented"
 	spawn: () -> throw new Error "not implemented"
 	
