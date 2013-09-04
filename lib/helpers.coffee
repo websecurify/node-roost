@@ -5,15 +5,12 @@ logsmight = require 'logsmith'
 # ---
 
 exports.escape = (input) ->
-	input
-		.replace(/\t/g, '\\t')
-		.replace(/\n/g, '\\n')
-		.replace(/(["`$\\])/g, '\\$1')
-		
+	return input.replace(/\t/g, '\\t').replace(/\n/g, '\\n').replace(/(["`$\\])/g, '\\$1')
+	
 # ---
 
 exports.quote = (input) ->
-	'"' + exports.escape(input) + '"'
+	return '"' + exports.escape(input) + '"'
 	
 # ---
 
@@ -23,6 +20,41 @@ exports.Stream = class Stream extends events.EventEmitter
 	emit_error: (error) -> @emit 'error', error
 	emit_exit: (exit) -> @emit 'exit', exit
 	
+# ---
+
+exports.create_exec_handler = (callback, failproof_or_handler) ->
+	(err, stream) ->
+		return callback err if err
+		
+		stream.on 'data', (data, extended) ->
+			switch
+				when extended == 'stdout' then out = process.stdout
+				when extended == 'stderr' then out = process.stderr
+				else out = process.stdout
+				
+			out.write data
+			
+		switch
+			when failproof_or_handler == undefined
+				failproof = false
+				handler = null
+			when typeof(failproof_or_handler) == 'boolean' || failproof_or_handler instanceof Boolean
+				failproof = failproof_or_handler
+				handler = null
+			else
+				failproof = false
+				handler = failproof_or_handler
+				
+		if handler
+			try
+				handler.call this, stream, callback
+			catch e
+				return callback e if callback
+		else
+			stream.on 'exit', (code) ->
+				return callback new Error "command exited with code #{code}" if code and !failproof
+				return callback null if callback
+				
 # ---
 
 exports.Target = class Target
