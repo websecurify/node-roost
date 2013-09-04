@@ -12,11 +12,13 @@
 
 # Introduction
 
-Roost is a provisioning system similar to [puppet](https://puppetlabs.com/) and [chef](http://www.opscode.com/chef/) but heavily inspired by the clean and unobtrusive design of the nodejs module eco-system.
+Roost is a provisioning system similar to [puppet](https://puppetlabs.com/) and [chef](http://www.opscode.com/chef/) but heavily inspired by the clean and unobtrusive design of the nodejs module eco-system. It is also a bit like [grunt](http://gruntjs.com/) but without the added complexity.
+
+Originally Roost was written in JavaScript but for better readability and reduced complexity, it is now written in CoffeeScript.
 
 # The Basics
 
-Roost is configured through a simple configuration file, typically called roost.json, however other names can be used too. The file is used to describes how a system is provisioned, i.e what packages, services and other characteristics a system needs to adhere to.
+Roost is configured through a simple manifest file, typically called roost.json, however other names can be used too. The file is used to describes how a system is provisioned, i.e what commands, packages, services and other characteristics a system needs to adhere to.
 
 When running roost without any command-line parameters it will try to look for the manifest file inside the current working directory. With the `-f|--file` option you can specify any arbitrary file or directory to be used by roost. For example:
 
@@ -42,24 +44,43 @@ Verbose messaging can be achieved via the `-v|--verbose` flags. Use the `-c|--co
 The following snippet describes the basic structure of the roost manifest file.
 
 	{
-		"bootstrap": [
-			"command"
-		]
-		
 		"plugins": [
 			"plugin-name"
 		],
 		
+		"bootstrap": [
+			"command"
+		],
+		
+		"files": [
+			"local": {
+				"destination": "remote",
+				"content": "content"
+			}
+		],
+		
 		"packages": {
-			"nodejs": "version|installed|purged"
+			"package": "version|installed|purged"
 		},
 		
 		"services": {
-			"nginx": "running|stopped"
+			"service": "running|stopped"
 		},
 		
 		"commands": [
 			"command"
+		],
+		
+		"tasks": [
+			"task": {
+				"commands": [
+					"command"
+				]
+			},
+			
+			"default": {
+				"require": ["task"]
+			}
 		]
 	}
 
@@ -77,15 +98,77 @@ Roost does not expose means by which you can configure the order of execution of
 
 * plugins
 * bootstrap
+* files
 * packages
 * services
 * commands
+* tasks
 
-This order is not finalised but this is what it is at the moment. The order of execution is pre-selected to avoid confusion and to provide some level of consistency. Based on the feedback that we get from the community we will tune this order or even expose means by which you can do dependency relationship management.
+This order is not finalised but this is what it is at the moment. The order of execution is pre-selected to avoid confusion and to provide some level of consistency. You can choose your own arbitary order by using tasks.
+
+Tasks are esentially mini roost config files and they can next inside the same roost directives as the ones described previously. Tasks can also provide dependencies. For example:
+
+	{
+		"tasks": {
+			"Another Task": {
+				"commands": [
+					"another command"
+				]
+			},
+		
+			"Some Task": {
+				"require": ["Another Task"]
+			
+				"commands": [
+					"some command"
+				]
+			}
+		}
+	}
+
+This level of nesting can go as much as you like. For example:
+
+	{
+		"tasks": {
+			"Another Task": {
+				"commands": [
+					"another command"
+				],
+				
+				{
+					"tasks": {
+						"Another Task": {
+							"commands": [
+								"another command"
+							]
+						},
+						
+						"Some Task": {
+							"require": ["Another Task"]
+		
+							"commands": [
+								"some command"
+							]
+						}
+					}
+				}
+			},
+			
+			"Some Task": {
+				"require": ["Another Task"]
+				
+				"commands": [
+					"some command"
+				]
+			}
+		}
+	}
+
+There are virtually no limits.
 
 # The Plugin System
 
-The plugin system of roost is essentially the nodejs module system. You can load plugins by declaring them inside the roost manifest file as illustrated previously. The plugin must to be either installed globally via npm or locally inside the node_modules folder structure.
+The plugin system of roost is essentially the nodejs module system. You can load plugins by declaring them inside the roost manifest file as illustrated previously. The plugin must be either installed globally via npm or locally inside the node_modules folder structure.
 
 Each plugin must export a function called `getRoost` or `roost`. Function `getRoost` is used to get an object that must export the function `roost`. The function expects two parameters: the manifest file and the target. Once the function is invoked the plugin will be able to traverse the manifest file for declarations it recognizes and execute actions via the target. A plugin may even augment the manifest structure if desired, i.e. a plugin my install more packages by simply extending the "packages" directive.
 
@@ -95,13 +178,13 @@ _For examples and inspiration check out the project source code._
 
 # Embedding Into Other Projects
 
-Roost can be easily embedded into other projects. Check out bin/roost for inspiration. Just copy and paste the parts that you need. The whole project has been designed to be easily embedable so that it can leave as part of larger and more complex systems.
+Roost can be easily embedded into other projects. Check out `bin/roost` and `lib/roost.coffee` for inspiration. Just copy and paste the parts that you need. The whole project has been designed to be easily embedable so that it can live as part of larger and more complex systems.
 
 You can also have a look at [Vortex](https://github.com/websecurify/node-vortex/), which embeds roost as the default provisioner.
 
 # Project Status and Future Plans
 
-The project is new and immature in many ways. We hope to change that in the upcoming months. At the moment only ubuntu/debian is supported so please fork it as much as you want and send us patches. We are keen to make something out of this.
+The project is new and immature in some ways. We hope to change this in the upcoming months. At the moment only ubuntu/debian is supported for the `packages` and the `services` directives. Please fork it as much as you want and send us patches. We are keen to make something out of this.
 
 Roost, although open source, is commercially backed by Websecurify. We are just starting to use it internally to manage our infrastructure. It is also the default provisioner for [Vortex](https://github.com/websecurify/node-vortex/), which is pretty decent virtual machine management toolki. We are committed to support it in the foreseeable future so you can be assured that it is actually used to satisfy real needs.
 
@@ -117,4 +200,4 @@ We want to support the community to create all kinds of ready-made systems. Shar
 * [node-roost-nodejs](https://github.com/websecurify/node-roost-nodejs/) - install and configure nodejs
 * [node-roost-mongodb](https://github.com/websecurify/node-roost-mongodb/) - install and configure mongodb
 
-The easiest way to install these plugins is to create a package.json file and declare the modules just as you usually do. Execute npm install inside the same folder than use roost to load the plugins that you need. It is as simple as that.
+The easiest way to install these plugins is to create a `package.json` file and declare the modules just as you usually do. Execute `npm install` inside the same folder than use roost to load the plugins that you need. It is as simple as that.
