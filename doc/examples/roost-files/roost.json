@@ -13,6 +13,7 @@
 			
 			"commands": [
 				"ls -la /tmp/document.txt",
+				"cat /tmp/document.txt",
 				"rm -rf /tmp/document.txt"
 			]
 		}
