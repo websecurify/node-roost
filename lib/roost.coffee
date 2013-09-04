@@ -38,7 +38,7 @@ exports.main = (argv=process.argv.slice(2)) ->
 	try roost_plugins = plugins.obtain roost_manifest
 	catch e then failure e
 	
-	try roost_targets = (if opt.argv.length then opt.argv else ['local:']).map (spec) -> targets.instance spec, roost_manifest
+	try roost_targets = (if opt.argv.length then opt.argv else ['local:']).map (spec) -> targets.create spec, roost_manifest
 	catch e then failure e
 	
 	for roost_target in roost_targets
