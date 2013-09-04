@@ -17,11 +17,10 @@ split_spec = (spec) ->
 # ---
 
 exports.create = (spec, manifest) ->
-	spec = split_spec spec if typeof(spec) == 'string' || spec instanceof String
+	spec = split_spec spec if typeof(spec) == 'string' or spec instanceof String
 	scheme = spec.scheme.toLowerCase();
 	name = scheme[0].toUpperCase() + scheme.substring(1, scheme.length);
 	
 	return new exports[name] spec.original, manifest if exports[name]?
-	
 	throw new Error "unrecognized target spec #{scheme}"
 	
