@@ -1,0 +1,20 @@
+{
+	"tasks": {
+		"copy-files": {
+			"files": {
+				"/tmp/document.txt": {
+					"source": "./document.txt"
+				}
+			}
+		},
+		
+		"check-files": {
+			"require": ["copy-files"],
+			
+			"commands": [
+				"ls -la /tmp/document.txt",
+				"rm -rf /tmp/document.txt"
+			]
+		}
+	}
+}
