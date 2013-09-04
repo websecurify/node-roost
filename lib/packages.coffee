@@ -26,7 +26,7 @@ exports.roost_packages = (opt, manifest, target) ->
 	true_values = [1, true, 'true', 'install', 'installed']
 	false_values = [0, false, 'false', 'remove', 'removed', 'purge', 'purged']
 	
-	for name, value in manifest.packages
+	for name, value of manifest.packages
 		switch
 			when value in true_values then action = 'install'
 			when value in false_values then action = 'remove'
