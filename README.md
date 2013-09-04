@@ -53,8 +53,8 @@ The following snippet describes the basic structure of the roost manifest file.
 		],
 		
 		"files": [
-			"local": {
-				"destination": "remote",
+			"remote": {
+				"source": "local",
 				"content": "content"
 			}
 		],
