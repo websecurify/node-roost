@@ -1,6 +1,6 @@
 {
 	"name": "roost",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"author": "Websecurify <contact@websecurify.com>",
 	"description": "System provisioning toolkit.",
 	"license": "MIT",
@@ -34,6 +34,7 @@
 		"path-extra": "0.1.1",
 		"fs-extra": "0.6.3",
 		"async": "0.2.9",
+		"tsort": "0.0.1",
 		"ssh2": "0.2.7",
 		
 		"logsmith": "latest"
