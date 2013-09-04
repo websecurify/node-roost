@@ -1,9 +1,9 @@
-bootstrap = require './bootstrap'
 files = require './files'
+tasks = require './tasks'
 packages = require './packages'
 services = require './services'
 commands = require './commands'
-tasks = require './tasks'
+bootstrap = require './bootstrap'
 
 # ---
 
