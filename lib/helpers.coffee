@@ -118,6 +118,7 @@ exports.Target = class Target
 			return callback exec_err if exec_err
 			return callback null if callback
 			
-	exec: () -> throw new Error "not implemented"
-	spawn: () -> throw new Error "not implemented"
+	copy: () -> throw new Error "copy not implemented"
+	exec: () -> throw new Error "exec not implemented"
+	spawn: () -> throw new Error "spawn not implemented"
 	
