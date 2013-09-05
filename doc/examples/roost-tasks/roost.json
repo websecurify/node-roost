@@ -1,0 +1,29 @@
+{
+	"tasks": {
+		"floating-task": {
+			"commands": [
+				"echo From Floating Task"
+			]
+		},
+		
+		"task1": {
+			"commands": [
+				"echo From Task 1"
+			]
+		},
+		
+		"task2": {
+			"commands": [
+				"echo From Task 2"
+			]
+		},
+		
+		"default": {
+			"require": ["task2", "task1"],
+			
+			"commands": [
+				"echo From Default"
+			]
+		}
+	}
+}
