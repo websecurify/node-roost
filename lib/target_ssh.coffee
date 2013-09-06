@@ -36,9 +36,12 @@ exports.Target = class Target extends helpers.Target
 		spec = parse_spec @spec
 		options =
 			tryKeyboard: true
-			
-		for param in ['host', 'port', 'username', 'password', 'privateKey', 'passphrase']
-			options[param] = spec[param] if spec[param]?
+			host: spec.hostname
+			port: spec.port
+			username: spec.username
+			password: spec.password
+			privateKey: spec.privateKey
+			passphrase: spec.passphrase
 			
 		@step (callback) =>
 			if options.privateKey?
@@ -67,7 +70,7 @@ exports.Target = class Target extends helpers.Target
 					when error.code == 'ECONNREFUSED' then callback new Error 'connection refused' if callback
 					when error.code == 'ETIMEDOUT' then callback new Error 'connection timed out' if callback
 					when error.level == 'authentication' then callback new Error error.message.toLowerCase().replace('.', ' -') if callback
-					else callback err if callback
+					else callback error if callback
 					
 			@ssh2.connect options
 			
