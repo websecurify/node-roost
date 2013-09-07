@@ -21,7 +21,7 @@ exports.Target = class Target extends helpers.Target
 		child.on 'error', (error) -> shell_stream.emit_error error
 		child.on 'exit', (code) -> shell_stream.emit_exit code
 		
-		callback null, shell_stream if callback
+		callback null, shell_stream
 		
 	do_spawn: (command, args, callback) ->
 		shell_stream = new helpers.Stream
@@ -31,7 +31,7 @@ exports.Target = class Target extends helpers.Target
 		child.on 'error', (error) -> shell_stream.emit_error error
 		child.on 'exit', (code) -> shell_stream.emit_exit code
 		
-		callback null, shell_stream if callback
+		callback null, shell_stream
 		
 	copy: (source, dest) ->
 		real_source = path.resolve path.dirname(@manifest.meta.location), source
