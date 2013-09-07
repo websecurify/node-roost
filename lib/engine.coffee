@@ -19,5 +19,5 @@ exports.launch = (opt, manifest, plugins, target, callback) ->
 	
 	target.ignite opt.options.dry, (err) ->
 		return callback err if err
-		return callback null if callback
+		return callback null
 		

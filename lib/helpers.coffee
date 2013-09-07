@@ -58,7 +58,7 @@ exports.create_exec_handler = (callback, failproof_or_handler) ->
 		else
 			stream.on 'exit', (code) ->
 				return callback new Error "command exited with code #{code}" if code and !failproof
-				return callback null if callback
+				return callback null
 				
 # ---
 
@@ -98,7 +98,7 @@ exports.Target = class Target
 			if dry
 				logsmight.info task.desc if task.desc?
 				
-				return callback null if callback
+				return callback null
 			else
 				super_callback = (err) =>
 					task_callback err if task_callback
@@ -111,7 +111,7 @@ exports.Target = class Target
 							exec_err = err
 							exec_pointer = 'recoveries'
 							
-					return callback null if callback
+					return callback null
 					
 				logsmight.info task.desc if task.desc?
 				
@@ -121,7 +121,7 @@ exports.Target = class Target
 		async.whilst test, fn, (err) ->
 			return callback err if err
 			return callback exec_err if exec_err
-			return callback null if callback
+			return callback null
 			
 	copy: () -> throw new Error "copy not implemented"
 	exec: () -> throw new Error "exec not implemented"

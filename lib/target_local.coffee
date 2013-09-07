@@ -42,7 +42,7 @@ exports.Target = class Target extends helpers.Target
 					logsmith.exception err if err
 					
 					return callback new Error "copy failed" if err
-					return callback null if callback
+					return callback null
 					
 		@step task
 		

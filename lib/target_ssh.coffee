@@ -52,9 +52,9 @@ exports.Target = class Target extends helpers.Target
 					
 					options.privateKey = data
 					
-					return callback null if callback
+					return callback null
 			else
-				return callback null if callback
+				return callback null
 				
 		@step (callback) =>
 			@ssh2 = new ssh2
@@ -63,7 +63,7 @@ exports.Target = class Target extends helpers.Target
 				@recover (callback) => @ssh2.end()
 				
 			@ssh2.on 'ready', () ->
-				return callback null if callback
+				return callback null
 				
 			@ssh2.on 'error', (error) ->
 				switch
@@ -89,7 +89,7 @@ exports.Target = class Target extends helpers.Target
 			stream.on 'error', (error) -> shell_stream.emit_error error
 			stream.on 'exit', (code) -> shell_stream.emit_exit code
 			
-			return callback null, shell_stream if callback
+			return callback null, shell_stream
 			
 	do_spawn: (command, args, callback) ->
 		args = (args or []).map (arg) -> helpers.quote arg
@@ -109,7 +109,7 @@ exports.Target = class Target extends helpers.Target
 			stream.on 'error', (error) -> shell_stream.emit_error error
 			stream.on 'exit', (code) -> shell_stream.emit_exit code
 			
-			return callback null, shell_stream if callback
+			return callback null, shell_stream
 			
 	copy: (source, dest) ->
 		real_source = path.resolve path.dirname(@manifest.meta.location), source
@@ -119,7 +119,7 @@ exports.Target = class Target extends helpers.Target
 				next = () =>
 					@sftp.fastPut real_source, dest, (err) ->
 						return callback err if err
-						return callback null if callback
+						return callback null
 						
 				if not @sftp?
 					@ssh2.sftp (err, sftp) =>

@@ -19,14 +19,14 @@ exports.roost = (opt, manifest, target) ->
 						logsmith.exception err if err
 						
 						return callback new Error "cannot create temp file #{temp_source}" if err
-						return callback null if callback
+						return callback null
 						
 				target.recover (callback) ->
 					fs_extra.remove temp_source, (err) ->
 						logsmith.exception err if err
 						
 						return callback new Error "cannot delete temp file #{temp_source}" if err
-						return callback null if callback
+						return callback null
 						
 				target.copy temp_source, file_name
 				
