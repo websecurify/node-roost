@@ -106,7 +106,7 @@ Roost does not expose means by which you can configure the order of execution of
 
 This order is not finalised but this is what it is at the moment. The order of execution is pre-selected to avoid confusion and to provide some level of consistency. You can choose your own arbitary order by using tasks.
 
-Tasks are esentially mini roost config files and they can next inside the same roost directives as the ones described previously. Tasks can also provide dependencies. For example:
+Tasks are esentially mini roost config files and they can nest inside the same roost directives as the ones described previously. Tasks can also provide dependencies. For example:
 
 	{
 		"tasks": {
