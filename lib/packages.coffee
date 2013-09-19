@@ -8,7 +8,7 @@ exports.roost_apt = (opt, manifest, target) ->
 		for repository in manifest.apt.repositories
 			target.spawn 'sudo', ['add-apt-repository', repository]
 			
-	target.exec 'sudo apt-get update' if manifest.apt.udpate?
+	target.exec 'sudo apt-get update' if manifest.apt.update?
 	
 # ---
 
