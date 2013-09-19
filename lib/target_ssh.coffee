@@ -143,7 +143,7 @@ exports.Target = class Target extends helpers.Target
 		
 	spawn: (command, args, failproof_or_handler) ->
 		task =
-			desc: command + (if args.length ? ' ' + args.join(' ') else '')
+			desc: command + args.join(' ').trim()
 			run: (callback) => @do_spawn command, args, helpers.create_exec_handler(callback, failproof_or_handler)
 			
 		@step task
